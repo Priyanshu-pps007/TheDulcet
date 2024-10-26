@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Your Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F0E5;
+        }
+
+        .header {
+            background-color: #693726;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .cart-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .restaurant-details {
+            background-color: #F5E8D1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .restaurant-details h2 {
+            margin: 0;
+            color: #693726;
+            font-size: 22px;
+        }
+
+        .cart-section h3 {
+            color: #693726;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .cart-item h4 {
+            font-size: 20px;
+            color: #693726;
+            margin: 0;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-controls button {
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .item-controls input {
+            width: 40px;
+            text-align: center;
+            margin: 0 10px;
+            font-size: 18px;
+        }
+
+        .remove-btn {
+            color: red;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 24px;
+            color: #693726;
+            margin-top: 20px;
+        }
+
+        .checkout-btn {
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .item-controls {
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Drive Thru Order</div>
+
+    <div class="cart-container">
+        <!-- Restaurant Details Section -->
+        <div class="restaurant-details">
+            <h2>The Dulcet<br>Taste and Legacy Continues</h2>
+            <p>Drive Thru</p>
+            <small>Drive up and let us know you placed an online order.</small>
+        </div>
+
+        <!-- Cart Items Section -->
+        <div class="cart-section">
+            <h3>Your Cart</h3>
+
+            <!-- Item 1 -->
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <div>
+                    <h4> {% if item.dish %}
+                        {{ item.dish.name }}
+                    {% elif item.combo %}
+                        {{ item.combo.name }}
+                    {% elif item.offer %}
+                        {{ item.offer.name }}
+                    {% endif %}
+                </h4>
+            
+                    <small>{{ item.get_total_price }}</small>
+                </div>
+                <div class="item-controls">
+                    <button type="button">-</button>
+                    <input type="number" value="1" min="1">
+                    <button type="button">+</button>
+                </div>
+                <span class="remove-btn">
+                    <a href="{% url 'remove_from_cart' item.id %}" class="remove-item">Remove</a></span>
+            </div>
+            {% endfor %}
+
+            <!-- More items can be added similarly -->
+
+        </div>
+
+        <!-- Cart Total -->
+        <div class="cart-total">
+            Total: $8.19
+        </div>
+
+        <!-- Checkout Button -->
+        <form action="{% url 'choose_order_type' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="checkout-btn">Place Order</button>
+        </form>
+    </div>
+
+</body>
+</html>

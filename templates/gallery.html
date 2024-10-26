@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+</head>
+<body>
+
+    <h1 class="section-heading"> Our Gallery</h1>
+
+    <section class="gallery">
+        <div class="container">
+            <div class="gallery-container">
+                {% for item in gallery_items %}
+                <div class="gallery-item" onclick="openModal('{{ item.image.url }}')">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for full-screen view -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Full-size image">
+        </div>
+    </div>
+
+    <script>
+        // Function to open the modal and display the clicked image
+        function openModal(imageSrc) {
+            var modal = document.getElementById('myModal');
+            var modalImg = document.getElementById('modalImage');
+            modal.style.display = "flex";
+            modalImg.src = imageSrc;
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

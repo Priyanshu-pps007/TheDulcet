@@ -1,0 +1,881 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My awesome food store</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/styles.css">
+
+
+    <style>
+
+        /* Container styling */
+
+        a:hover{
+            color: #f8f8f8 !important;
+        }
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section-heading {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.food-slider {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+    overflow: hidden;
+}
+
+.food-card {
+    flex: 0 0 300px; /* Ensures each card has a fixed width */
+    margin: 0 15px; /* Space between cards */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    height: 450px;
+    position: relative; /* Ensure card stays in place */
+}
+
+.slider-btn {
+    background-color: #693726;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev-btn {
+    left: -30px; /* Adjust button position */
+}
+
+.next-btn {
+    right: -30px; /* Adjust button position */
+}
+
+@media (max-width: 768px) {
+    .food-card {
+        flex: 0 0 250px; /* Adjust width for mobile */
+        height: 350px; /* Adjust height for mobile */
+    }
+
+
+}
+
+.slider-btn:hover {
+    background-color: #FF5733;
+}
+.product-image img {
+    max-width: 100%;
+    height: 200px; /* Control image height */
+    object-fit: cover; /* Ensure images are cropped properly to fit the space */
+    margin-bottom: 10px;
+}
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-size: 1.2rem;
+    color: #ff5733;
+    margin-bottom: 15px;
+}
+
+button {
+    background-color: #693726;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button img {
+    width: 20px;
+    margin-right: 5px;
+}
+
+/* Slider buttons */
+/* .slider-btn {
+    background-color: #693726;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+} */
+
+.slider-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.slider-btn:hover {
+    background-color: #FF5733;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .food-card {
+        flex: 0 0 250px; /* Adjust width for mobile */
+        height: 350px; /* Adjust height for mobile */
+    }
+
+    .food-slider {
+        width: 100%;
+    }
+}
+    @media (max-width: 768px) {
+    .food-card {
+        flex: 0 0 250px;  /* Adjust width for mobile */
+        height: 350px;  /* Adjust height for mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .food-card {
+        flex: 0 0 250px; /* This width is suitable for mobile */
+    }
+}
+
+
+/* Hide mobile nav by default */
+.mobile-nav {
+    display: none;
+    background-color: #fff;  /* Adjust background color */
+    position: absolute;
+    top: 7rem;  /* Adjust based on your layout */
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Show mobile nav when it has the 'open' class */
+.mobile-nav.open {
+    display: block;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10vh;
+}
+
+.food-slider {
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.food-card {
+    flex: 0 0 300px; /* Adjust this width as needed */
+    margin: 0 15px;
+    /* ... other existing styles ... */
+}
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .topbar {
+            background-color: #f8f8f8;
+            padding: 10px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .icons a {
+            margin-right: 10px;
+        }
+
+        .auth {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth > div {
+            margin-left: 15px;
+        }
+
+        .divider {
+            margin: 0 10px;
+        }
+
+        .nav-trigger {
+            display: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-trigger {
+                display: block;
+                position: absolute;
+                top: 10px;
+                right: 15px;
+            }
+
+            .topbar {
+                display: none;
+            }
+
+            .topbar.active {
+                display: block;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .auth {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .auth > div {
+                margin: 10px 0;
+            }
+        }
+        a{
+            color: white;
+            font-family: Raleway-semibold;
+        }
+        @media (max-width:476px){
+    .food-card{
+  
+        height: 100%;
+   
+        width: 30px !important;
+
+    }
+   
+   
+    .slider-btn.prev-btn{
+        position: absolute;
+        z-index: 3 !important; 
+        overflow-x: auto;
+        display: block !important;
+        height: 50px !important;
+    }
+    button::slider-btn.prev-btn{
+        position: absolute;
+        z-index: 3 !important;
+        overflow-x: auto;
+    }
+    .slider-btn.next-btn{
+        
+        display: block !important;
+        height: 50px !important;
+    }
+
+    .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.food-slider{
+    overflow-x: auto;
+}
+}
+
+    </style>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const navTrigger = document.querySelector('.nav-trigger');
+    const mobileNav = document.querySelector('.mobile-nav');
+    
+    navTrigger.addEventListener('click', function() {
+        mobileNav.classList.toggle('open');
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    const sliderTrack = document.querySelector('.slider-track');
+    const foodCards = document.querySelectorAll('.food-card');
+    
+    const cardWidth = foodCards[0].offsetWidth + 30;  
+    const trackWidth = cardWidth * foodCards.length;
+    
+    sliderTrack.style.width = `${trackWidth}px`;
+    
+    let currentPosition = 0;
+    const containerWidth = document.querySelector('.food-slider').offsetWidth;
+    const maxPosition = trackWidth - containerWidth;
+
+    const updateSliderPosition = () => {
+        sliderTrack.style.transform = `translateX(${-currentPosition}px)`;
+    };
+
+    nextBtn.addEventListener('click', () => {
+        if (currentPosition < maxPosition) {
+            currentPosition = Math.min(currentPosition + containerWidth, maxPosition);
+            updateSliderPosition();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentPosition > 0) {
+            currentPosition = Math.max(currentPosition - containerWidth, 0);
+            updateSliderPosition();
+        }
+    });
+});
+
+
+
+
+</script>
+   
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="nav-background">
+            
+        
+
+            
+        
+        <div class="site-content-wrapper">
+            <div class="nav-trigger" style="margin: 0 !important; width: 100% !important; top:0 !important">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-bar-chart">
+            
+            
+                    
+                    <line x1="12" y1="20" x2="12" y2="10" />
+                    <line x1="18" y1="20" x2="18" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="16" /></svg>
+                    <div class="topbar" style="background-color: #79443b; ">
+                        <div  style="margin-top: 0px !important; display: flex; justify-content: center;">
+                            <!-- <div class="icons">
+                                <a href="#"><img src="./icons/facebook.svg" alt=""></a>
+                                <a href="#"><img src="./icons/twitter.svg" alt=""></a>
+                                <a href="#"><img src="./icons/google.svg" alt=""></a>
+                                <a href="#"><img src="./icons/instagram.svg" alt=""></a>
+                                <a href="#"><img src="./icons/search.svg" alt=""></a>
+                            </div> -->
+                            <div class="auth flex items-center" style="background-color: #79443b">
+                                <div style="display: flex;flex-direction: row !important; column-gap: 5vw; text-decoration: none; font-family: Raleway-semibold;">
+                                    <img src="../static/icons/user-icon.svg" alt=""/>
+                                    {% if user.is_authenticated %}
+                                    <a href="/logout/">Logout</a>
+                                    {% else %}
+                                    <a href="{% url 'login'%}" style=" font-family: Raleway-semibold;">Login</a>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex;flex-direction: row !important; column-gap: 5vw;">
+                                    {% if user.is_authenticated %}
+                                    <span></span>
+                                    {% else %}
+                          
+                                    <img src="../static/icons/edit.svg" alt="">
+                                    <a href="{% url 'signup'%}">Register</a>
+                                    
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex;flex-direction: row !important;column-gap: 5vw;">
+                                    <img src="../static/icons/cart.svg" alt="">
+                                    <a href="{% url 'view_cart'%}">0 Items - ($0.00)</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <h2>Logout</h2> -->
+                    
+            </div>
+        
+            <div class="site-content">
+                <header class="topbar">
+                    <div class="container flex justify-between items-center">
+                        <div class="icons">
+                            <a href="#"><img src="./icons/facebook.svg" alt=""></a>
+                            <a href="#"><img src="./icons/twitter.svg" alt=""></a>
+                            <a href="#"><img src="./icons/google.svg" alt=""></a>
+                            <a href="#"><img src="./icons/instagram.svg" alt=""></a>
+                            <a href="#"><img src="./icons/search.svg" alt=""></a>
+                        </div>
+                        <div class="auth flex items-center">
+                            <div>
+                                <img src="../static/icons/user-icon.svg" alt="">
+                                {% if user.is_authenticated %}
+                                <a href="/logout/">Logout</a>
+                                {% else %}
+                                <a href="{% url 'login'%}">Log in</a>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if user.is_authenticated %}
+                                <span></span>
+                                {% else %}
+                                <span class="divider">|</span>
+                                <img src="../static/icons/edit.svg" alt="">
+                                <a href="{% url 'signup'%}">Register Now</a>
+                                <span class="divider">|</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <img src="../static/icons/cart.svg" alt="">
+                                <a href="{% url 'view_cart'%}">0 Items - ($0.00)</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <nav>
+                    <div class="top">
+                        <div class="container flex justify-between">
+                            <div class="contact flex items-center">
+                                <img src="./icons/phone.svg" alt="">
+                                <div>
+                                    <h5>Call US: (+84) 123 456 789</h5>
+                                    <h6>E-mail : support@freshmeal.com</h6>
+                                </div>
+                            </div>
+                            <div class="branding">
+                                <img src="/static/images/logo.png" alt="">
+                            </div>
+                            <div class="time flex items-center">
+                                <img src="/static/icons/clock.svg" alt="">
+                                <div>
+                                    <h5>Working Hours:</h5>
+                                    <h6>Mon - Sat (8.00am - 12.00am)</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar magic-shadow">
+                        <div class="container flex justify-center">
+                            <a href="" class="active">Home</a>
+                            <a href="{% url 'meals'%}">Menu</a>
+                            <a href="#">Top Deals</a>
+                            
+                            <a href="{% url 'view_cart'%}">Cart</a>
+                            <a href="#">About Us</a>
+                        </div>
+                    </div>
+                </nav>
+
+                <header class="hero flex items-center">
+            
+                    <div class="container">
+                        <div class="welcome flex items-center">
+                            <span>Welcome to</span>
+                            <img src="/static/Images/name.png" alt="" style="width:12rem ; height: 7rem;">
+                        </div>
+                        <h1>The Taste and   <span>Legacy</span></h1>
+                        <h1>Continues</h1>
+                        <br>
+                        <p>Baked with love, served with a smile.</p>
+                        <div>
+                           
+                            <a href="{% url 'meals' %}" class="btn btn-secondary">
+                                Order Now <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="hero-image">
+                            <img src="/static/images/cupcake (2).png" alt="">
+                        
+                        </div>
+                    </div>
+                </header>
+                   <div class="Order-section">
+                    
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button class="btn-1 " type="button">Order Now</button>
+                      
+                      </div>
+                    
+                    
+                   </div>
+
+
+
+
+                   <section class="top-products">
+                    <div class="container">
+                        <h1 class="section-heading">Top Products</h1>
+                        <div class="slider-container">
+                            <button class="slider-btn prev-btn">
+                                <img src="{% static 'icons/pre.svg' %}" alt="">
+                            </button>
+                            <div class="food-slider" >
+                                <div class="slider-track">
+                                    {% for product in top_products %}
+                                    <div class="food-card magic-shadow-sm">
+                                        <div class="product-image flex items-center justify-center">
+                                            <!-- Dynamically load the product image -->
+                                            <img src="{{ product.image.url}}" alt="{{product.name}}">
+                                        </div>
+                                        <hr>
+                                        <div>
+                                            <!-- Product Name -->
+                                            <h2 class="text-center">{{ product.name  }}</h2>
+                                            <div class="price text-center">
+                                                <!-- Product Price -->
+                                                $ {{product.price }}
+                                            </div>
+                                            <!-- <div class="flex justify-center">
+                                                <button>
+                                                    <img src="{% static 'icons/cart-2.svg' %}" alt="">
+                                                    <span>Add to cart</span>
+                                                </button>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <button class="slider-btn next-btn">
+                                <img src="{% static 'icons/next.svg' %}" alt="">
+                            </button>
+                        </div>
+                        <div class="text-center btn-wrapper">
+                            <a href="{% url 'meals' %}">
+                                <button class="btn btn-primary">View Menu</button>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                
+
+                
+                <section class="our-services">
+                    <div class="container">
+                        <h1 class="section-heading">Our services</h1>
+                        <div class="card-wrapper flex">
+                            <div class="service-card magic-shadow-sm">
+                                <img class="icon" src="./icons/transport.svg" alt="">
+                                <h2>Home delivery</h2>
+                                <img src="/static/images/delivery.jpeg" alt="Delivery icon" style="height: 15rem; width: 15rem;">
+                                <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> -->
+                                <!-- <button class="btn btn-secondary">Read More</button> -->
+                            </div>
+                            <div class="service-card magic-shadow-sm">
+                                <img class="icon" src="./icons/bag.svg" alt="">
+                                <h2 class="text-primary">The Dulcet</h2>
+                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <button class="btn btn-primary">View more</button>
+                            </div>
+                            <div class="service-card magic-shadow-sm">
+                                <img class="icon" src="./icons/usd.svg" alt="">
+                                <h2>Caterin Services</h2>
+                                <img src="/static/Images/Caterin.jpg" alt="" style="height: 15rem; width: 15rem;">
+                                <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> -->
+                                <!-- <button class="btn btn-primary">View more</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="big-deal">
+                    <div class="container">
+                        <h1 class="section-heading text-pure">Big Deals of the Week</h1>
+                        <div class="timer">
+                            <div>
+                                <span>02</span>
+                                <span>Days</span>
+                            </div>
+                            <div>
+                                <span>24</span>
+                                <span>Hours</span>
+                            </div>
+                            <div>
+                                <span>55</span>
+                                <span>Minutes</span>
+                            </div>
+                            <div>
+                                <span>58</span>
+                                <span>Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="latest-news">
+                    <div class="container">
+                        <h1 class="section-heading">Our Ambience</h1>
+                        <div class="article-wrapper">
+                            <article class="card magic-shadow-sm">
+                                <div>
+                                    <img src="/static/images/Dulcet.jpg" alt="">
+                                </div>
+                                <div class="card-content">
+
+                                    <h2>Lorem Ipsum is simply dummy text of the printing</h2>
+                                    <p>It is a long established fact that a reader will be distracted by the readable
+                                        content of a
+                                        page when looking at its layout. The point of using Lorem Ipsum is that it has a
+                                        more
+                                        letters.</p>
+                                </div>
+                            </article>
+                            <article class="card magic-shadow-sm">
+                                <div>
+                                    <img src="/static/images/interior.jpg" alt="">
+                                </div>
+
+                                <div class="card-content">
+
+                                    <h2>Lorem Ipsum is simply dummy text of the printing</h2>
+                                    <p>It is a long established fact that a reader will be distracted by the readable
+                                        content of a
+                                        page when looking at its layout. The point of using Lorem Ipsum is that it has a
+                                        more
+                                        letters.</p>
+
+
+
+                                </div>
+                            </article>
+                        </div>
+                        <div class="text-center btn-wrapper">
+                            <a href="{% url 'gallery' %}" class="btn btn-primary">View All</a>
+                        </div>
+                    </div>
+                </section>
+
+                
+
+                <section class="contact-us flex">
+                    <div class="contact-info-wrapper">
+                        <h1 class="section-heading">Contact us</h1>
+                        <div class="contact-info">
+                            <div>
+                                <div>
+                                    <img src="/static/icons/phone-2.svg" alt="">
+                                    <div>
+                                        <span>Call us:</span>
+                                        <span>(+84) 123 456 789</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <img src="./icons/bag-2.svg" alt="">
+                                    <div>
+                                        <span>E-mail ::</span>
+                                        <span>support@freshmeal.com</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <img src="./icons/clock-2.svg" alt="">
+                                    <div>
+                                        <span>Working Hours:</span>
+                                        <span>Mon - Sat (8.00am - 12.00am)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map">
+
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.335980682886!2d81.8620510065268!3d25.39356182237369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3985358b175fda33%3A0x67655d3160737eaf!2sTHE%20DULCET%20BAKERY%20AND%20CAFE%20%7C%20BEST%20RESTAURANT%20IN%20NAINI%20ALLAHABAD%20%7C%20TOP%20RESTURANT%20IN%20NAINI%20PRAYAGRAJ!5e0!3m2!1sen!2sin!4v1727767974008!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                    </div>
+                </section>
+
+                <footer>
+                    <div class="container">
+                        
+                        <div class="box">
+                            <h3>Follow Us</h3>
+                            <div>
+                                <ul>
+                                    <!-- <li>
+                                        <a href="https://www.facebook.com/codersgyan">
+                                            <img src="./icons/facebook.svg" alt="">
+                                            <span>Facebook</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://twitter.com/CoderGyan">
+                                            <img src="./icons/twitter.svg" alt="">
+                                            <span>Twitter</span>
+                                        </a>
+                                    </li> -->
+                                    
+                                    <li>
+                                        <a href="https://www.instagram.com/codersgyan/">
+                                            <a href="https://www.instagram.com/thedulcetcafeandbakery?igsh=MXM4enVsZ3h1aTZ2" target="_blank" >
+                                            <img src="/static/icons/instagram.svg" alt="">
+                                        
+                                            <span  >Instagram</span>
+                                        </a>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--  -->
+                <footer class="copyright " style="position: -webkit-sticky;">
+                    <div>
+                        Copyright © 2020 .All rights reserved by <a href="https://www.instagram.com/_webmania/">webmania</a>.
+                    </div>
+                    <nav class="navbar fixed-bottom bg-body-tertiary">
+                        <div class="footer-nav">
+                            <div class="fixed-nav">
+                                <ul>
+                                    <li class="list">
+                                        <a href="#">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-house"></i>
+                                            </span>
+                                            <span class="text">Home</span>
+                                        </a>
+                                    </li>
+                                    <li class="list">
+                                        <a href="{% url 'meals'%}">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-utensils"></i>
+                                            </span>
+                                            <span class="text">Menu</span>
+                                        </a>
+                                    </li>
+                                    <li class="list">
+                                        <a href="#">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tag"></i>
+                                            </span>
+                                            <span class="text">Offers</span>
+                                        </a>
+                                    </li>
+                                    <li class="list">
+                                        <a href="#">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-users"></i>
+                                            </span>
+                                            <span class="text">Bookings</span>
+                                        </a>
+                                    </li>
+                                    <li class="list">
+                                        <a href="{% url 'view_cart'%}">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-cart-plus"></i>
+                                            </span>
+                                            <span class="text">Cart</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                          <!-- <a class="navbar-brand" href="#">Fixed bottom</a> -->
+                        </div>
+                      </nav>
+                    
+                    
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+        
+
+
+
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // JavaScript for toggling the navbar
+        document.addEventListener('DOMContentLoaded', function() {
+            const navTrigger = document.querySelector('.nav-trigger');
+            const topbar = document.querySelector('.topbar');
+
+            navTrigger.addEventListener('click', function() {
+                topbar.classList.toggle('active');
+            });
+        });
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Account</title>
+    <link rel="stylesheet" href="{% static 'css/account.css' %}">
+</head>
+<body>
+    <div class="account-container">
+        <h1>Welcome, {{ user.username }}</h1>
+
+        <div class="account-info">
+            <h2>Account Information</h2>
+            <p><strong>Name:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user_copy.email }}</p>
+            <p><strong>Phone Number:</strong> {{ user_copy.phone_number }}</p>
+            <p><strong>Address:</strong> {{ user_copy.Address }}</p>
+        </div>
+
+        <div class="order-history">
+            <h2>Your Orders</h2>
+            {% if orders %}
+                <ul>
+                    {% for order in orders %}
+                        <li>
+                            <strong>Order ID:</strong> {{ order.id }} | 
+                            <strong>Total:</strong> ${{ order.total_price }} | 
+                            <strong>Mode:</strong> {{ order.get_order_mode_display }} | 
+                            <strong>Status:</strong> {{ order.get_status_display }} | 
+                            <strong>Date:</strong> {{ order.order_date|date:"M d, Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't placed any orders yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="logout-button">
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dulcet - Sign Up</title>
+    <style>
+        /* Background image for the whole page */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            /* background-image: url('/images/background\ \(4\).jpg'); Add your background image here */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #EFDECD;
+        }
+
+        /* Logo container styling */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Large, centered brand logo */
+        .logo-container img {
+            width: 400px; /* Same as login page */
+            max-width: 100%;
+        }
+
+        /* Rectangular sign-up form styling */
+        .signup-container {
+            background-color: rgba(255, 255, 255, 0.85); /* Slight transparency to see background image */
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            margin-top: -50px; /* Shift sign-up box upwards */
+        }
+
+        .signup-container h2 {
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .signup-container input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.7rem 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .signup-container button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: #d4af37;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .signup-container button:hover {
+            background-color: #c8a000;
+        }
+
+        /* Additional login option below the sign-up box */
+        .login-option {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .login-option a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-option a:hover {
+            text-decoration: underline;
+        }
+
+        /* Decorative border and elements */
+        .signup-container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .signup-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .signup-container {
+                padding: 1.5rem 2rem;
+                max-width: 90%;
+            }
+
+            .logo-container img {
+                width: 250px; /* Smaller logo on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo container at the top, centered -->
+    <div class="logo-container">
+        <img src="/static/Images/name.png" alt="The Dulcet Logo">
+    </div>
+
+    <!-- Rectangular sign-up form container -->
+    <div class="signup-container">
+         <h2>Sign Up</h2>
+        <!-- <form action="dashboard.html" method="post">
+            <input type="text" placeholder="Username" required>
+            <input type="email or phone no." placeholder="Email or Phone no." required>
+            <input type="password" placeholder="Password" required>
+            <input type="password" placeholder="Confirm Password" required>
+            <button type="submit">Sign Up</button>
+        </form> -->
+
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="Username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="Email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" name="PhoneNumber" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="Password" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="ConfirmPassword" placeholder="Confirm Password" required>
+            </div>
+            <button type="submit" class="auth-button">Sign Up</button>
+        </form>
+
+        <!-- Additional login option -->
+        <div class="login-option">
+            Already have an account? <a href="{% url 'login'%}">Login now</a>
+        </div>
+    </div>
+
+</body>
+</html>

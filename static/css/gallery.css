@@ -1,0 +1,102 @@
+body {
+    background-color: #EFDECD; /* Brown color */
+}
+        /* Gallery container styling */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid layout */
+            gap: 10px; /* Space between items */
+            padding: 20px;
+        }
+
+        /* Each gallery item in landscape mode */
+        .gallery-item {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effect on images */
+        .gallery-item:hover img {
+            transform: scale(1.1); /* Scale the image on hover */
+        }
+
+        /* Modal (lightbox) styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw;  /* Max width of the image relative to viewport width */
+            max-height: 90vh; /* Max height of the image relative to viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Ensures the image fits within the modal without being cropped */
+            border-radius: 8px;
+        }
+
+        /* Close button */
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        .section-heading{
+            font-family:"Raleway-bold";
+            text-align:center;
+            Position:relative;
+            margin-bottom:6rem;
+        }
+        .section-heading:after{
+            content:'';
+            display:block;
+            width: 100%;
+            height:30px;
+            background-image:url(../icons/hr.svg);
+            background-repeat: no-repeat;
+            background-position: center;
+            position:absolute;
+            bottom:-40px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust grid for smaller screens */
+            }
+        }
