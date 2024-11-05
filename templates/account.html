@@ -1,49 +1,337 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Account</title>
-    <link rel="stylesheet" href="{% static 'css/account.css' %}">
+    <title>Royal Bonus Points</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f7f1e8;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: #79443b;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .auth-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .auth-links a {
+            color: white;
+            text-decoration: none;
+            font-family: 'Raleway-semibold', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-links img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Custom Hamburger Icon */
+        .mobile-nav-trigger {
+            display: none;
+            cursor: pointer;
+            padding: 10px;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .hamburger-line {
+            display: block;
+            position: absolute;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .line-top {
+            width: 35px;  /* Shortest line */
+            top: 0;
+            height: 3px;
+            border-radius: 5px;
+        }
+
+        .line-middle {
+            width: 20px;  /* Medium line */
+            top: 50%;
+            height: 3px;
+            border-radius: 5px;
+            transform: translateY(-50%);
+        }
+
+        .line-bottom {
+            width: 15px;  /* Longest line */
+            bottom: 0;
+            height: 3px;
+            border-radius: 5px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #603813;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #603813;
+            margin: 10px 0;
+        }
+
+        .crowns-count {
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #603813;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .redeem-button {
+            background-color: #f1a21b;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .options-list {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+        }
+
+        .options-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ececec;
+            color: #603813;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .options-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .options-list-item:hover {
+            background-color: #f9f4eb;
+        }
+
+        .account-info {
+            display: none;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-info h2 {
+            font-size: 28px;
+            color: #603813;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .account-info p {
+            font-size: 16px;
+            color: #603813;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav-trigger {
+                display: block;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .auth-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 15px;
+                display: none;
+                padding-top: 15px;
+            }
+
+            .auth-links.active {
+                display: flex;
+            }
+
+            .main-content {
+                margin-top: 60px;
+            }
+
+            /* Animate hamburger icon when menu is active */
+       
+        }
+    </style>
 </head>
 <body>
-    <div class="account-container">
-        <h1>Welcome, {{ user.username }}</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="mobile-nav-trigger">
+                <span class="hamburger-line line-bottom"></span>
+                <span class="hamburger-line line-middle"></span>
+                <span class="hamburger-line line-top"></span>
+            </div>
+            <div class="auth-links">
+                {% if user.is_authenticated %}
+                <img src="../static/icons/user-icon.svg" alt="Logout">
+                <a href="/logout/">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}">
+                    <img src="../static/icons/user-icon.svg" alt="Login">
+                    Login
+                </a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <span></span>
+                {% else %}
+                <a href="{% url 'signup' %}">
+                    <img src="../static/icons/edit.svg" alt="Register">
+                    Register
+                </a>
+                {% endif %}
+                <a href="{% url 'view_cart' %}">
+                    <img src="../static/icons/cart.svg" alt="Cart">
+                    0 Items - ($0.00)
+                </a>
+            </div>
+        </div>
+    </nav>
 
-        <div class="account-info">
-            <h2>Account Information</h2>
-            <p><strong>Name:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user_copy.email }}</p>
-            <p><strong>Phone Number:</strong> {{ user_copy.phone_number }}</p>
-            <p><strong>Address:</strong> {{ user_copy.Address }}</p>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Royal Bonus Points</h1>
+            <p>You have <span class="crowns-count">{{bonus_point}}</span> points available</p>
+            <p>To Get Points Order Now <br> Call Us To Redeem your Points</p>
+            <button class="redeem-button">Redeem Now</button>
         </div>
 
-        <div class="order-history">
-            <h2>Your Orders</h2>
-            {% if orders %}
-                <ul>
-                    {% for order in orders %}
-                        <li>
-                            <strong>Order ID:</strong> {{ order.id }} | 
-                            <strong>Total:</strong> ${{ order.total_price }} | 
-                            <strong>Mode:</strong> {{ order.get_order_mode_display }} | 
-                            <strong>Status:</strong> {{ order.get_status_display }} | 
-                            <strong>Date:</strong> {{ order.order_date|date:"M d, Y" }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You haven't placed any orders yet.</p>
+        <div class="options-list">
+            <div class="options-list-item" onclick="showAccountInfo()">
+                <span>👤 Account Info</span>
+                <i>›</i>
+            </div>
+            <div class="options-list-item" onclick="showOrderInfo()">
+                <span>🧾 Recent Orders</span>
+                <i>›</i>
+            </div>
+        </div>
+
+        <div id="accountInfo" class="account-info">
+            {% if user_copy %}
+            {% for u in user_copy %}
+
+            <h2>Account Information</h2>
+            <p>Email: {{u.email}}</p>
+            <p>Name: {{u.username}}</p>
+            <p>Phone Number: {{u.phone_number}}</p>
+            {% endfor %}
             {% endif %}
         </div>
 
-        <div class="logout-button">
-            <form action="{% url 'logout' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Log Out</button>
-            </form>
+        <div id="orderinfo" class="account-info">
+            {% if orders %}
+            <h2>Order Information</h2>
+            {% for u in orders %}
+
+            <p>Username: {{u.user}}</p>
+            <p>Total price: {{u.total_price}}</p>
+            <p>Order Date: {{u.order_date}}</p>
+            <p>Order Mode: {{u.order_mode}}</p>
+            <p>Status: {{u.status}}</p>
+            <hr>
+            {% endfor %}
+            {% endif %}
         </div>
     </div>
+
+    <script>
+        // Toggle mobile navigation and hamburger icon animation
+        document.querySelector('.mobile-nav-trigger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.auth-links').classList.toggle('active');
+        });
+
+        // Show account info
+        function showAccountInfo() {
+            const accountInfo = document.getElementById('accountInfo');
+            accountInfo.style.display = 'block';
+            accountInfo.scrollIntoView({ behavior: 'smooth' });
+
+
+        
+        }
+        function showOrderInfo() {
+            const accountInfo = document.getElementById('orderinfo');
+            accountInfo.style.display = 'block';
+            accountInfo.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+    
 </body>
 </html>

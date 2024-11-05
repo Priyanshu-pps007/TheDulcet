@@ -585,6 +585,7 @@ section.big-deal {
     background: linear-gradient(
         #93745f,
         rgba(35,43,56,0.9)
+    
     ), url(../images/food-table.jpg);
     background-size: cover;
     background-repeat: no-repeat;

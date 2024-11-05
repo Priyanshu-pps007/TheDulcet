@@ -6,8 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#79443b">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My awesome food store</title>
+    <title>The Dulcet</title>
     <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet">
@@ -87,12 +88,57 @@
     right: -30px; /* Adjust button position */
 }
 
+#smallscreen{
+    display: none;
+}
+#ordersmall{
+    display: none;
+}
+#ordersmalldeliver{
+    display: none;
+}
+
 @media (max-width: 768px) {
     .food-card {
         flex: 0 0 250px; /* Adjust width for mobile */
         height: 350px; /* Adjust height for mobile */
     }
+    #orderlarge{
+        display: none;
+    }
+    #orderlargedeliver{
+        display: none;
+    }
+    #ordersmall{
+        display: block !important;
+    }
+    #ordersmalldeliver{
+    display: block;
+}
 
+    #largescreen{
+        display: none;
+    }
+    #smallscreen{
+        display: block !important;
+    }
+    #welcomemsg{
+        margin-top: 120px;
+    }
+
+    #cupcake{
+        margin-top: 50px;
+    }
+
+    #contactpart{
+        display: flex;
+        flex-direction: column !important;
+        max-width: 100vw !important;
+    }
+    .imgsforresp{
+        height: 100% !important;
+        width: 100% !important;
+    }
 
 }
 
@@ -102,7 +148,7 @@
 .product-image img {
     max-width: 100%;
     height: 200px; /* Control image height */
-    object-fit: cover; /* Ensure images are cropped properly to fit the space */
+    object-fit: cover; /* Ensure Images are cropped properly to fit the space */
     margin-bottom: 10px;
 }
 h2 {
@@ -177,6 +223,7 @@ button img {
         flex: 0 0 250px; /* This width is suitable for mobile */
     }
 }
+
 
 
 /* Hide mobile nav by default */
@@ -322,6 +369,8 @@ button img {
             color: white;
             font-family: Raleway-semibold;
         }
+
+
         @media (max-width:476px){
     .food-card{
   
@@ -361,6 +410,7 @@ button img {
     overflow-x: auto;
 }
 }
+
 
     </style>
 
@@ -416,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </head>
 
 <body>
+  
     <div class="main-wrapper">
         <div class="nav-background">
             
@@ -447,24 +498,33 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div style="display: flex;flex-direction: row !important; column-gap: 5vw; text-decoration: none; font-family: Raleway-semibold;">
                                     <img src="../static/icons/user-icon.svg" alt=""/>
                                     {% if user.is_authenticated %}
-                                    <a href="/logout/">Logout</a>
+                                    <a href="/logout/" style="text-decoration: none;">Logout</a>
                                     {% else %}
-                                    <a href="{% url 'login'%}" style=" font-family: Raleway-semibold;">Login</a>
+                                    <a href="{% url 'login'%}" style=" font-family: Raleway-semibold; text-decoration: none !important;" >Login</a>
                                     {% endif %}
                                 </div>
-                                <div style="display: flex;flex-direction: row !important; column-gap: 5vw;">
+                                <div style="height: 0; display: none;"">
                                     {% if user.is_authenticated %}
-                                    <span></span>
+                                    <span style="margin: 0; width: 0; height: 0 !important; display: none; margin-bottom: 30px !;"></span>
                                     {% else %}
                           
                                     <img src="../static/icons/edit.svg" alt="">
-                                    <a href="{% url 'signup'%}">Register</a>
+                                    <a href="{% url 'signup'%}" style="text-decoration: none;">Register</a>
                                     
                                     {% endif %}
                                 </div>
-                                <div style="display: flex;flex-direction: row !important;column-gap: 5vw;">
+                                <div style="display: flex;flex-direction: row !important;column-gap: 5vw;text-decoration: none;">
                                     <img src="../static/icons/cart.svg" alt="">
-                                    <a href="{% url 'view_cart'%}">0 Items - ($0.00)</a>
+                                    <a href="{% url 'view_cart'%}"  style="text-decoration: none;">0 Items - (₹0.00)</a>
+                                </div>
+                                <div style="display: flex;flex-direction: row !important; column-gap: 5vw;text-decoration: none;">
+                                    {% if user.is_authenticated %}
+                                    <a href="account/" style="text-decoration: none !important;"><span style="margin-top: 130px;">🧾 <span style="margin-left: 10px;"> Account </span></span></a>
+                                    {% else %}
+                          
+                                    <span></span>
+                                    
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -472,7 +532,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- <h2>Logout</h2> -->
                     
             </div>
-        
+            <div class="alert-container" id="smallscreen" style="margin-top: 70px; margin-bottom: 0;">
+                {% if request.GET.success %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0;">
+                        Login successful
+                        <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="alert-container" id="ordersmall" style="margin-bottom: 0;">
+                {% if request.GET.order_success %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0;">
+                        Order pickup has been placed successfully
+                        <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="alert-container" id="ordersmalldeliver" style="margin-bottom: 0;">
+                {% if request.GET.order_success_delivery %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0;">
+                        Your delivery order has been placed successfully!
+                        <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
             <div class="site-content">
                 <header class="topbar">
                     <div class="container flex justify-between items-center">
@@ -504,30 +587,54 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div>
                                 <img src="../static/icons/cart.svg" alt="">
-                                <a href="{% url 'view_cart'%}">0 Items - ($0.00)</a>
+                                <a href="{% url 'view_cart'%}">0 Items - (₹0.00)</a>
                             </div>
                         </div>
                     </div>
                 </header>
-
+                <div class="alert-container" id="largescreen">
+                    {% if request.GET.success %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Login successful
+                            <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="alert-container" id="orderlarge">
+                    {% if request.GET.order_success %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Order pickup has been placed successfully
+                            <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="alert-container" id="orderlargedeliver">
+                    {% if request.GET.order_success_delivery %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0;">
+                            Your delivery order has been placed successfully!
+                            <button type="button" onclick="closing()" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                </div>
                 <nav>
+                    
                     <div class="top">
                         <div class="container flex justify-between">
                             <div class="contact flex items-center">
                                 <img src="./icons/phone.svg" alt="">
                                 <div>
-                                    <h5>Call US: (+84) 123 456 789</h5>
-                                    <h6>E-mail : support@freshmeal.com</h6>
+                                    <h5>Call US: (+91) 9219991004</h5>
+                                    <h6>E-mail : thedulcetcafeandbakery@gmail.com</h6>
                                 </div>
                             </div>
                             <div class="branding">
-                                <img src="/static/images/logo.png" alt="">
+                                <img src="/static/Images/logo.png" alt="">
                             </div>
                             <div class="time flex items-center">
                                 <img src="/static/icons/clock.svg" alt="">
                                 <div>
                                     <h5>Working Hours:</h5>
-                                    <h6>Mon - Sat (8.00am - 12.00am)</h6>
+                                    <h6>Mon - Sun (10:30am - 10:30pm)</h6>
                                 </div>
                             </div>
                         </div>
@@ -536,10 +643,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="container flex justify-center">
                             <a href="" class="active">Home</a>
                             <a href="{% url 'meals'%}">Menu</a>
-                            <a href="#">Top Deals</a>
+                            <a href="offers/">Offer</a>
                             
                             <a href="{% url 'view_cart'%}">Cart</a>
-                            <a href="#">About Us</a>
+                            {% if user.is_authenticated %}
+                            <a href="account/">Account</a>
+                            {% else %}
+                            <a href="login/">Account</a>
+                            {% endif %}
                         </div>
                     </div>
                 </nav>
@@ -547,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <header class="hero flex items-center">
             
                     <div class="container">
-                        <div class="welcome flex items-center">
+                        <div class="welcome flex items-center" id="welcomemsg">
                             <span>Welcome to</span>
                             <img src="/static/Images/name.png" alt="" style="width:12rem ; height: 7rem;">
                         </div>
@@ -561,18 +672,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 Order Now <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
-                        <div class="hero-image">
-                            <img src="/static/images/cupcake (2).png" alt="">
+                        <div class="hero-image" id="cupcake">
+                            <img src="/static/Images/cupcake (2).png" alt="">
                         
                         </div>
                     </div>
                 </header>
                    <div class="Order-section">
-                    
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn-1 " type="button">Order Now</button>
-                      
-                      </div>
+                
                     
                     
                    </div>
@@ -601,7 +708,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             <h2 class="text-center">{{ product.name  }}</h2>
                                             <div class="price text-center">
                                                 <!-- Product Price -->
-                                                $ {{product.price }}
+                                                ₹ {{product.price }}
                                             </div>
                                             <!-- <div class="flex justify-center">
                                                 <button>
@@ -635,20 +742,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="service-card magic-shadow-sm">
                                 <img class="icon" src="./icons/transport.svg" alt="">
                                 <h2>Home delivery</h2>
-                                <img src="/static/images/delivery.jpeg" alt="Delivery icon" style="height: 15rem; width: 15rem;">
+                                <img class="imgsforresp" src="/static/Images/delivery.jpeg" alt="Delivery icon" style="height: 15rem; ">
                                 <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> -->
                                 <!-- <button class="btn btn-secondary">Read More</button> -->
                             </div>
                             <div class="service-card magic-shadow-sm">
                                 <img class="icon" src="./icons/bag.svg" alt="">
-                                <h2 class="text-primary">The Dulcet</h2>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                <button class="btn btn-primary">View more</button>
+                                <h2 >Tiffin Service</h2>
+                                <img src="/static/Images/tiffin-service.jpg" width="80%">
+                                <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <button class="btn btn-primary">View more</button> -->
                             </div>
                             <div class="service-card magic-shadow-sm">
                                 <img class="icon" src="./icons/usd.svg" alt="">
                                 <h2>Caterin Services</h2>
-                                <img src="/static/Images/Caterin.jpg" alt="" style="height: 15rem; width: 15rem;">
+                                <img class="imgsforresp" src="/static/Images/Caterin.jpg" alt="" style="height: 15rem; width: 15rem;">
                                 <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p> -->
                                 <!-- <button class="btn btn-primary">View more</button> -->
                             </div>
@@ -657,24 +765,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </section>
                 <section class="big-deal">
                     <div class="container">
-                        <h1 class="section-heading text-pure">Big Deals of the Week</h1>
+                        <h1 class="section-heading text-pure">From our kitchen to your table, we serve the finest fare you'll find <br>  keeping stomachs happy and taste buds sublime </h1>
+                        <!-- <h3 style="text-align: center;"> keeping stomachs happy and taste buds sublime</h3> -->
                         <div class="timer">
-                            <div>
-                                <span>02</span>
-                                <span>Days</span>
-                            </div>
-                            <div>
-                                <span>24</span>
-                                <span>Hours</span>
-                            </div>
-                            <div>
-                                <span>55</span>
-                                <span>Minutes</span>
-                            </div>
-                            <div>
-                                <span>58</span>
-                                <span>Seconds</span>
-                            </div>
+                          
                         </div>
                     </div>
                 </section>
@@ -683,33 +777,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="container">
                         <h1 class="section-heading">Our Ambience</h1>
                         <div class="article-wrapper">
-                            <article class="card magic-shadow-sm">
+                            <article class="card magic-shadow-sm" style="margin-right: 6vw;">
                                 <div>
-                                    <img src="/static/images/Dulcet.jpg" alt="">
+                                    <img src="/static/Images/Dulcet.jpg"  alt="">
                                 </div>
                                 <div class="card-content">
 
-                                    <h2>Lorem Ipsum is simply dummy text of the printing</h2>
-                                    <p>It is a long established fact that a reader will be distracted by the readable
-                                        content of a
-                                        page when looking at its layout. The point of using Lorem Ipsum is that it has a
-                                        more
-                                        letters.</p>
+                                    <h2> The Perfect Dining Escape </h2>
+                                    <p>Dulcet Restro boasts an elegant yet warm ambiance, creating an inviting setting for memorable dining experiences. With soft lighting and tasteful decor, it exudes sophisticated charm that encourages guests to relax and enjoy every moment. The thoughtfully designed layout ensures intimacy while maintaining comfort, enhancing the overall experience. Each element, from the color scheme to the furnishings, harmonizes to create a pleasing atmosphere, making Dulcet Restro the ideal space for casual gatherings or special occasions alike.</p>
                                 </div>
                             </article>
-                            <article class="card magic-shadow-sm">
+                            <article class="card magic-shadow-sm" style="margin-right: 6vw;">
                                 <div>
-                                    <img src="/static/images/interior.jpg" alt="">
+                                    <img src="/static/Images/interior.jpg" alt="">
                                 </div>
 
                                 <div class="card-content">
 
-                                    <h2>Lorem Ipsum is simply dummy text of the printing</h2>
-                                    <p>It is a long established fact that a reader will be distracted by the readable
-                                        content of a
-                                        page when looking at its layout. The point of using Lorem Ipsum is that it has a
-                                        more
-                                        letters.</p>
+                                    <h2>Timeless Elegance at Dulcet Restro</h2>
+                                    <p>Dulcet Restro’s ambiance beautifully melds classic charm with modern comfort, honoring its rich legacy. Warm lighting and elegant decor create a cozy yet sophisticated atmosphere, inviting guests to relax and enjoy. Every detail is thoughtfully crafted to celebrate Dulcet’s tradition, ensuring that each visit is a memorable experience steeped in timeless elegance.</p>
 
 
 
@@ -724,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 
 
-                <section class="contact-us flex">
+                <section class="contact-us flex" id="contactpart">
                     <div class="contact-info-wrapper">
                         <h1 class="section-heading">Contact us</h1>
                         <div class="contact-info">
@@ -733,29 +819,29 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <img src="/static/icons/phone-2.svg" alt="">
                                     <div>
                                         <span>Call us:</span>
-                                        <span>(+84) 123 456 789</span>
+                                        <span>(+91) 9219991004</span>
                                     </div>
                                 </div>
                                 <div>
                                     <img src="./icons/bag-2.svg" alt="">
                                     <div>
                                         <span>E-mail ::</span>
-                                        <span>support@freshmeal.com</span>
+                                        <span>thedulcetcafeandbakery@gmail.com</span>
                                     </div>
                                 </div>
                                 <div>
                                     <img src="./icons/clock-2.svg" alt="">
                                     <div>
                                         <span>Working Hours:</span>
-                                        <span>Mon - Sat (8.00am - 12.00am)</span>
+                                        <span>Mon - Sun (10:30am - 10:30am)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="map">
+                    <div class="map" >
 
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.335980682886!2d81.8620510065268!3d25.39356182237369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3985358b175fda33%3A0x67655d3160737eaf!2sTHE%20DULCET%20BAKERY%20AND%20CAFE%20%7C%20BEST%20RESTAURANT%20IN%20NAINI%20ALLAHABAD%20%7C%20TOP%20RESTURANT%20IN%20NAINI%20PRAYAGRAJ!5e0!3m2!1sen!2sin!4v1727767974008!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.335980682886!2d81.8620510065268!3d25.39356182237369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3985358b175fda33%3A0x67655d3160737eaf!2sTHE%20DULCET%20BAKERY%20AND%20CAFE%20%7C%20BEST%20RESTAURANT%20IN%20NAINI%20ALLAHABAD%20%7C%20TOP%20RESTURANT%20IN%20NAINI%20PRAYAGRAJ!5e0!3m2!1sen!2sin!4v1727767974008!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
                     </div>
                 </section>
@@ -792,19 +878,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </ul>
                             </div>
                         </div>
+                        <div style="margin-bottom: 100px !important;">
+                            Design and developed by <a href="https://www.instagram.com/_webmania/">webmania</a>.
+                        </div>
                         <!--  -->
-                <footer class="copyright " style="position: -webkit-sticky;">
-                    <div>
-                        Copyright © 2020 .All rights reserved by <a href="https://www.instagram.com/_webmania/">webmania</a>.
-                    </div>
+                <footer class="copyright"  style="position: -webkit-sticky;">
+                   
                     <nav class="navbar fixed-bottom bg-body-tertiary">
                         <div class="footer-nav">
                             <div class="fixed-nav">
                                 <ul>
                                     <li class="list">
                                         <a href="#">
-                                            <span class="icon">
-                                                <i class="fa-solid fa-house"></i>
+                                            <span class="icon" style="height: 5px !important;">
+                                                <i style="height: 2px !important;" class="fa-solid fa-house"></i>
                                             </span>
                                             <span class="text">Home</span>
                                         </a>
@@ -818,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </a>
                                     </li>
                                     <li class="list">
-                                        <a href="#">
+                                        <a href="offers/">
                                             <span class="icon">
                                                 <i class="fa-solid fa-tag"></i>
                                             </span>
@@ -826,11 +913,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </a>
                                     </li>
                                     <li class="list">
-                                        <a href="#">
+                                        <a style="cursor: pointer;" onclick="bookingmessage()">
                                             <span class="icon">
                                                 <i class="fa-solid fa-users"></i>
                                             </span>
-                                            <span class="text">Bookings</span>
+                                            <span class="text" ">Bookings</span>
                                         </a>
                                     </li>
                                     <li class="list">
@@ -846,9 +933,14 @@ document.addEventListener('DOMContentLoaded', () => {
                           <!-- <a class="navbar-brand" href="#">Fixed bottom</a> -->
                         </div>
                       </nav>
-                    
+                    <script>
+                        const bookingmessage=()=>{
+                            window.alert("For Bookings contact (+91) 9219991004  ")
+                        }
+                        </script>
                     
                 </footer>
+               
             </div>
         </div>
     </div>
@@ -874,8 +966,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 topbar.classList.toggle('active');
             });
         });
+
     </script>
     
+<script>
+    const closing=()=>{
+        window.location.href="https://thedulcet.in/"
+    }
+</script>
+
+    
+
 </body>
 
 </html>

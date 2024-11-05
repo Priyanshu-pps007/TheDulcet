@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import *
-
+from django.urls import reverse
+from urllib.parse import urlencode
 from django.http import JsonResponse
 from .models import Dish
 
@@ -16,13 +17,14 @@ from .forms import LocationForm
 
 from django.contrib.auth import logout
 import google.generativeai as genai
-from dotenv import load_dotenv
+
 
 import os
 
 
 def logout_user(request):
     print("here logout")
+    messages.get_messages(request)
     logout(request)
     return redirect("/")
 
@@ -34,7 +36,8 @@ def logout_user(request):
 # Create your views here.
 
 def offers_view(request):
-    offers = Offer.objects.all()
+    offers = Offers.objects.all()
+    print(offers)
     return render(request, 'offers.html', {'offers': offers})
 
 
@@ -72,7 +75,7 @@ def signup(request):
                 messages.info(request, 'Phone Number already registered')
                 return redirect('signup')
             
-            elif User.objects.filter(username=username).exists():
+            elif User.objects.filter(username=username).exists() or UserCopy.objects.filter(username=username).exists():
                 messages.info(request, 'Username already Taken')
                 return redirect('signup')
             
@@ -86,7 +89,12 @@ def signup(request):
                 user_copy = UserCopy(user=user, password=Password, email=Email, phone_number = PhoneNumber, username = username)
                 user_copy.save()
 
-                return redirect('login')
+                # return redirect('login?signup_success=true')
+            
+                base_url = reverse('login')
+                query_params = urlencode({'signup_success': 'true'})
+                url = f'{base_url}?{query_params}'
+                return redirect(url)
     
         else:
             messages.info(request, "Password does not match")
@@ -115,7 +123,11 @@ def login(request):
         if myuser is not None:
             user = myuser.user 
             auth.login(request, user)
-            return redirect('/')
+            base_url = reverse('index')
+            query_params = urlencode({'success': 'true'})
+            url = f'{base_url}?{query_params}'
+            return redirect(url)
+            # return redirect('/')
         else:
             messages.error(request, 'Invalid credentials. Please try again.')
             return render(request, 'login.html')
@@ -210,7 +222,7 @@ def about_dish(request, dish_id):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))  # Default quantity is 1 if not specified
         cart_item, created = Cart.objects.get_or_create(dish=dish, defaults={'quantity': quantity})
-        
+        print("here")
         if not created:
             # If the item already exists in the cart, update the quantity
             cart_item.quantity += quantity
@@ -263,8 +275,12 @@ def about_dish(request, dish_id):
                 'price': str(dish.price * quantity),
             }
             request.session['cart'] = cart
-
-        return redirect('view_cart')
+        base_url = reverse('view_cart')
+        query_params = urlencode({'success': 'true'})
+        url = f'{base_url}?{query_params}'
+        print("url is",url)
+        return redirect(url)
+        # return redirect('view_cart')
 
     context = {
         'dish': dish,
@@ -306,7 +322,6 @@ def about_combo(request, combo_id):
 def place_order(request):
     # Get the user's cart
     cart = get_object_or_404(Cart, user=request.user)
-
     # Use the related name 'cart_items' to get all cart items
     cart_items = cart.cart_items.all()  
 
@@ -426,7 +441,7 @@ def place_order(request):
 
         # Handle order type 'pickup'
         mail = request.user
-        userobj = userinfo.objects.get(email = mail)
+        userobj = userinfo.objects.filter(email = mail).first()
         if order_type == 'pickup':
             order = Order.objects.create(
                 user=userobj,
@@ -446,7 +461,11 @@ def place_order(request):
             cart.save()
 
             messages.success(request, "Your pickup order has been placed successfully!")
-            return redirect('/')
+            base_url = reverse('index')
+            query_params = urlencode({'order_success': 'true'})
+            url = f'{base_url}?{query_params}'
+            return redirect(url)
+            # return redirect('/')
 
         # Handle order type 'delivery'
         elif order_type == 'delivery':
@@ -471,7 +490,7 @@ def place_order(request):
                     )
                     mail = request.user
                     # print(mail)
-                    userobj=userinfo.objects.get(email=mail)
+                    userobj=userinfo.objects.filter(email=mail).first()
                     if distance <= delivery_settings.delivery_radius:
                         order = Order.objects.create(
 
@@ -493,16 +512,32 @@ def place_order(request):
                         cart.save()
 
                         messages.success(request, f"Your delivery order has been placed successfully! (Distance: {distance:.2f} km)")
-                        return redirect('/')
+                        # return redirect('/')
+                        base_url = reverse('index')
+                        query_params = urlencode({'order_success_delivery': 'true'})
+                        url = f'{base_url}?{query_params}'
+                        return redirect(url)
                     else:
                         messages.error(request, f"Sorry, delivery is not available. Your location is {distance:.2f} km away, exceeding the {delivery_settings.delivery_radius} km limit.")
-                        return redirect('choose_order_type')
+                        base_url = reverse('choose_order_type')
+                        query_params = urlencode({'order_fail': 'true'})
+                        url = f'{base_url}?{query_params}'
+                        return redirect(url)
+                        # return redirect('choose_order_type')
                 else:
                     messages.error(request, "Delivery settings are not configured.")
-                    return redirect('choose_order_type')
+                    base_url = reverse('choose_order_type')
+                    query_params = urlencode({'setting_error': 'true'})
+                    url = f'{base_url}?{query_params}'
+                    return redirect(url)
+                    # return redirect('choose_order_type')
             else:
                 messages.error(request, "Could not find your location. Please try again.")
-                return redirect('choose_order_type')
+                base_url = reverse('choose_order_type')
+                query_params = urlencode({'location_notfound': 'true'})
+                url = f'{base_url}?{query_params}'
+                return redirect(url)
+                # return redirect('choose_order_type')
 
     return redirect('view_cart')
 
@@ -532,15 +567,20 @@ from .models import UserCopy, Order
 @login_required
 def account_page(request):
     # Get the user's copy details
-    user_copy = UserCopy.objects.get(user=request.user)
+    print(request.user)
+    user_copy = UserCopy.objects.filter(email=request.user)
 
     # Get the user's orders
-    orders = Order.objects.filter(user=request.user)
+    useris=userinfo.objects.filter(email=request.user).first()
+    orders = Order.objects.filter(user=useris)
 
     # Pass the user information and orders to the template
+    for u in user_copy:
+        bonus_point=u.bonus_points
     context = {
         'user_copy': user_copy,
-        'orders': orders
+        'orders': orders,
+        'bonus_point':bonus_point
     }
     return render(request, 'account.html', context)
 

@@ -168,7 +168,14 @@ class Order(models.Model):
     def mark_as_completed(self):
         if self.status == 'completed':
             user_copy = UserCopy.objects.get(username=self.user)
-            user_copy.bonus_points += 1  # Increase the bonus points by 1
+            if self.total_price > 500:
+                result=self.total_price//500
+                user_copy.bonus_points += result*20
+            elif self.total_price > 200 and self.total_price<500:
+                result2=self.total_price//200
+                user_copy.bonus_points += result2*10
+            else:
+                user_copy.bonus_points += 1 
             user_copy.save()
 
     def save(self, *args, **kwargs):

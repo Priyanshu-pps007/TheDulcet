@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
     <title>Cart - Your Order</title>
     <style>
         body {
@@ -110,7 +113,6 @@
             margin-top: 20px;
         }
 
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .cart-item {
                 flex-direction: column;
@@ -125,61 +127,146 @@
     </style>
 </head>
 <body>
-
+   
+    
     <div class="header">Drive Thru Order</div>
-
+    <div class="alert-container">
+        {% if request.GET.success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Item added to cart
+                <button type="button"  class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    </div>
     <div class="cart-container">
-        <!-- Restaurant Details Section -->
         <div class="restaurant-details">
             <h2>The Dulcet<br>Taste and Legacy Continues</h2>
             <p>Drive Thru</p>
             <small>Drive up and let us know you placed an online order.</small>
         </div>
-
-        <!-- Cart Items Section -->
+        
         <div class="cart-section">
             <h3>Your Cart</h3>
 
-            <!-- Item 1 -->
             {% for item in cart_items %}
             <div class="cart-item">
                 <div>
-                    <h4> {% if item.dish %}
-                        {{ item.dish.name }}
-                    {% elif item.combo %}
-                        {{ item.combo.name }}
-                    {% elif item.offer %}
-                        {{ item.offer.name }}
-                    {% endif %}
-                </h4>
-            
-                    <small>{{ item.get_total_price }}</small>
+                    <h4>
+                        {% if item.dish %}
+                            {{ item.dish.name }}
+                        {% elif item.combo %}
+                            {{ item.combo.name }}
+                        {% elif item.offer %}
+                            {{ item.offer.name }}
+                        {% endif %}
+                    </h4>
+                    <small class="baseprice" style="display: none;">{{item.price}}</small>
+                    <small class="itemquantity" style="display: none;">{{item.quantity}}</small>
+                    <small class="totalprice">Cost: ₹<span class="price-display">{{item.get_total_price}}</span></small>
                 </div>
                 <div class="item-controls">
-                    <button type="button">-</button>
-                    <input type="number" value="1" min="1">
-                    <button type="button">+</button>
+                    <button type="button" class="decrease-btn" onclick="decreaseQuantity(this)">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1" readonly>
+                    <button type="button" class="increase-btn" onclick="increaseQuantity(this)">+</button>
                 </div>
                 <span class="remove-btn">
-                    <a href="{% url 'remove_from_cart' item.id %}" class="remove-item">Remove</a></span>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="remove-item" onclick="removeItem(this, event)">Remove</a>
+                </span>
             </div>
             {% endfor %}
-
-            <!-- More items can be added similarly -->
-
         </div>
 
-        <!-- Cart Total -->
         <div class="cart-total">
-            Total: $8.19
+            Total: ₹<span id="grand-total">{{grand_total}}</span>
         </div>
 
-        <!-- Checkout Button -->
         <form action="{% url 'choose_order_type' %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="checkout-btn">Place Order</button>
         </form>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            cartItems.forEach(item => {
+                const quantity = parseInt(item.querySelector('.itemquantity').textContent);
+                const quantityInput = item.querySelector('.quantity-input');
+                quantityInput.value = quantity;
+                updateItemPrice(item);
+            });
+            updateGrandTotal();
+        });
+
+        function increaseQuantity(button) {
+            const cartItem = button.closest('.cart-item');
+            const quantityInput = cartItem.querySelector('.quantity-input');
+            const currentQuantity = parseInt(quantityInput.value);
+            
+            // Remove the maxQuantity check to allow increasing beyond initial quantity
+            quantityInput.value = currentQuantity + 1;
+            updateItemPrice(cartItem);
+            updateGrandTotal();
+            
+            // You might want to add an AJAX call here to update the backend
+            // Example:
+            // updateQuantityOnServer(itemId, newQuantity);
+        }
+
+        function decreaseQuantity(button) {
+            const cartItem = button.closest('.cart-item');
+            const quantityInput = cartItem.querySelector('.quantity-input');
+            const currentQuantity = parseInt(quantityInput.value);
+
+            if (currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                updateItemPrice(cartItem);
+                updateGrandTotal();
+                
+                // You might want to add an AJAX call here to update the backend
+                // Example:
+                // updateQuantityOnServer(itemId, newQuantity);
+            }
+        }
+
+        function updateItemPrice(cartItem) {
+            const basePrice = parseFloat(cartItem.querySelector('.baseprice').textContent);
+            const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
+            const priceDisplay = cartItem.querySelector('.price-display');
+            const totalPrice = basePrice * quantity;
+            priceDisplay.textContent = totalPrice.toFixed(2);
+        }
+
+        function updateGrandTotal() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            let total = 0;
+
+            cartItems.forEach(item => {
+                const priceDisplay = item.querySelector('.price-display');
+                total += parseFloat(priceDisplay.textContent);
+            });
+
+            document.getElementById('grand-total').textContent = total.toFixed(2);
+        }
+
+        function removeItem(link, event) {
+            event.preventDefault();
+            const cartItem = link.closest('.cart-item');
+            cartItem.remove();
+            updateGrandTotal();
+            
+            fetch(link.href)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error('Failed to remove item');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

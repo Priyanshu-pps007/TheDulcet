@@ -141,7 +141,7 @@
         function updatePrice() {
             const priceElement = document.getElementById('unit-price');
             if (priceElement) {
-                const unitPrice = parseFloat(priceElement.textContent.replace('Price: $', ''));
+                const unitPrice = parseFloat(priceElement.textContent.replace('Price: ₹', ''));
                 let quantity = parseInt(document.getElementById('quantity').value);
 
                 if (quantity > 9) {
@@ -151,7 +151,7 @@
 
                 if (!isNaN(unitPrice) && !isNaN(quantity)) {
                     const totalPrice = (unitPrice * quantity).toFixed(2);
-                    document.getElementById('total-price').textContent = 'Total: $' + totalPrice;
+                    document.getElementById('total-price').textContent = 'Total: ₹' + totalPrice;
                 }
             }
         }
@@ -167,8 +167,8 @@
 
 
     <div class="site-content">
-        <header class="topbar">
-            <div class="container flex justify-between items-center">
+        <header class="topbar" style="width: 100%">
+            <div class="container flex justify-between items-center" style="width: fit-content;">
                 <div class="icons">
                     <a href="#"><img src="./icons/facebook.svg" alt=""></a>
                     <a href="#"><img src="./icons/twitter.svg" alt=""></a>
@@ -197,7 +197,7 @@
                     </div>
                     <div>
                         <img src="./icons/cart.svg" alt="">
-                        <a href="{% url 'view_cart'%}">0 Items - ($0.00)</a>
+                        <a href="{% url 'view_cart'%}">0 Items - (₹0.00)</a>
                     </div>
                 </div>
             </div>
@@ -217,7 +217,7 @@
         <div class="product-details">
             <h1>{{ dish.name }}</h1>
             <p class="description">{{ dish.description }}</p>
-            <p class="price" id="unit-price">Price: ${{ dish.price }}</p>
+            <p class="price" id="unit-price">Price: ₹{{ dish.price }}</p>
             <p class="additional-info">{{ dish.additional_info }}</p> <!-- New field for additional information -->
         </div>
 
@@ -229,7 +229,7 @@
                 <button type="submit">Add to Cart</button>
             </div>
             <div class="total-price">
-                <p id="total-price">Total: ${{ dish.price }}</p>
+                <p id="total-price">Total: ₹{{ dish.price }}</p>
             </div>
         </form>
     </div>
